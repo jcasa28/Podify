@@ -3,8 +3,14 @@ import pyttsx3
 import streamlit as st
 import PyPDF2
 import io
+import threading
 
 openai.api_key = "consiguete tu API"
+engine = pyttsx3.init()
+engine.setProperty('rate', 150)
+engine.setProperty('volume', 1.0)
+speech_thread = None
+stop_flag = threading.Event()
 
 def ask_openai(theme):
     try:
@@ -22,11 +28,29 @@ def ask_openai(theme):
         return f"Error: {e}"
 
 def speak_text(text):
-    engine = pyttsx3.init()
-    engine.setProperty('rate', 150)
-    engine.setProperty('volume', 1.0)
-    engine.say(text)
-    engine.runAndWait()
+    words = text.split()
+    chunk = []
+    for word in words:
+        if stop_flag.is_set():
+            break
+        chunk.append(word)
+        # if len(chunk) >= 10:
+        #     engine.say(' '.join(chunk))
+        #     engine.runAndWait()
+        #     chunk = []
+    if chunk and not stop_flag.is_set():
+        engine.say(' '.join(chunk))
+        engine.runAndWait()
+
+def start_speech(text):
+    global speech_thread
+    stop_flag.clear()
+    speech_thread = threading.Thread(target=speak_text, args=(text,))
+    speech_thread.start()
+
+def stop_speech():
+    stop_flag.set()
+    engine.stop()
 
 def extract_text_from_pdf(uploaded_file):
     try:
@@ -40,28 +64,28 @@ def extract_text_from_pdf(uploaded_file):
 
 # Example usage
 if __name__ == "__main__":
-    st.title("AI Podcast Generator")
+    st.title("Podify 🎙️")
+    st.subheader("Generate your podcast from a PDF")
 
-    user = st.text_input("Type a theme: ")
-    uploaded_pdf = st.file_uploader("Upload a PDF", type="pdf")
+    uploaded_pdf = st.file_uploader("Upload a PDF 📁", type="pdf")
 
     if uploaded_pdf:
         pdf_text = extract_text_from_pdf(uploaded_pdf)
-        st.subheader("PDF Content")
-        st.text_area("Extracted Text", pdf_text, height=300)
 
-        st.subheader("Generating Summary...")
         summary = ask_openai(f"Summarize the following text:\n\n{pdf_text}")
-        st.text_area("Summary", summary, height=200)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.subheader("PDF Content")
+            extracted_PDF = st.text_area("Extracted Text", pdf_text, height=300)
+
+        with col2:
+            st.subheader("Summary")
+            summary_text = st.text_area("Summary", summary, height=300)
 
         if st.button("Generate Podcast"):
-            st.subheader("Podcast Script")
-            st.text_area("Podcast", summary, height=200)
-            speak_text(summary)
+            start_speech(summary)
 
-    elif user:
-        reply = ask_openai(user)
-        st.text_area("AI Response", reply, height=200)
-
-        if st.button("Generate Podcast"):
-            speak_text(reply)
+        if st.button("⏯️"):
+            stop_speech()
