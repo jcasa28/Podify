@@ -18,7 +18,7 @@ Tech Stack
 Getting Started
 1. Clone the repo
    
-`git clone https://github.com/yourusername/podify.git`
+`git clone https://github.com/jcasa28/podify.git`
 
 `cd podcast_generator_backend`
 
