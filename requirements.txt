@@ -15,7 +15,7 @@ elevenlabs==1.56.0
 frozenlist==1.5.0
 gitdb==4.0.12
 GitPython==3.1.44
-gTTS==2.5.4
+gtts==2.5.4
 h11==0.14.0
 httpcore==1.0.7
 httpx==0.28.1
@@ -198,7 +198,6 @@ pyobjc-framework-WebKit==11.0
 PyPDF2==3.0.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.0
-pyttsx3==2.98
 pytz==2025.2
 referencing==0.36.2
 requests==2.32.3
