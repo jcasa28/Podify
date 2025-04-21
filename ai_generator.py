@@ -55,24 +55,21 @@ if __name__ == "__main__":
     if uploaded_pdf:
         pdf_text = extract_text_from_pdf(uploaded_pdf)
 
-        # Button to make the podcast script
-        if st.button("Make Script"):
-            script = ask_openai(f"create a podcast script of: \n\n{pdf_text}")
-            st.session_state["podcast_script"] = script
 
-        # Display PDF content and script side by side
+        summary = ask_openai(f"create a podcast script of: \n\n{pdf_text}")
+
         col1, col2 = st.columns(2)
+
         with col1:
             st.subheader("PDF Content")
-            st.text_area("Extracted Text", pdf_text, height=300)
-        with col2:
-            st.subheader("Podcast Script")
-            script = st.session_state.get("podcast_script", "")
-            st.text_area("Script", script, height=300)
+            extracted_PDF = st.text_area("Extracted Text", pdf_text, height=300)
 
-        # Button to generate and play the podcast audio
-        if st.session_state.get("podcast_script") and st.button("Generate Podcast"):
-            summary = st.session_state["podcast_script"]
+        with col2:
+            st.subheader("Summary")
+            summary_text = st.text_area("Summary", summary, height=300)
+
+        if st.button("Generate Podcast"):
+            # Generate audio bytes and embed via HTML for better mobile support
             audio_bytes = generate_audio(summary).getvalue()
             b64 = base64.b64encode(audio_bytes).decode()
             audio_html = f'<audio controls src="data:audio/mp3;base64,{b64}"></audio>'
