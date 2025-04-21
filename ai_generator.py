@@ -58,19 +58,19 @@ if __name__ == "__main__":
         if st.button("Make Script"):
             summary = ask_openai(f"create a podcast script of: \n\n{pdf_text}")
 
-        col1, col2 = st.columns(2)
+            col1, col2 = st.columns(2)
 
-        with col1:
-            st.subheader("PDF Content")
-            extracted_PDF = st.text_area("Extracted Text", pdf_text, height=300)
+            with col1:
+                st.subheader("PDF Content")
+                extracted_PDF = st.text_area("Extracted Text", pdf_text, height=300)
 
-        with col2:
-            st.subheader("Summary")
-            summary_text = st.text_area("Summary", summary, height=300)
+            with col2:
+                st.subheader("Summary")
+                summary_text = st.text_area("Summary", summary, height=300)
 
-        if st.button("Generate Podcast"):
-            # Generate audio bytes and embed via HTML for better mobile support
-            audio_bytes = generate_audio(summary).getvalue()
-            b64 = base64.b64encode(audio_bytes).decode()
-            audio_html = f'<audio controls src="data:audio/mp3;base64,{b64}"></audio>'
-            components.html(audio_html, height=100)
+            if st.button("Generate Podcast"):
+                # Generate audio bytes and embed via HTML for better mobile support
+                audio_bytes = generate_audio(summary).getvalue()
+                b64 = base64.b64encode(audio_bytes).decode()
+                audio_html = f'<audio controls src="data:audio/mp3;base64,{b64}"></audio>'
+                components.html(audio_html, height=100)
