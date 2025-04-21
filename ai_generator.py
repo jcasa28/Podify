@@ -46,6 +46,8 @@ def extract_text_from_pdf(uploaded_file):
 
 # Example usage
 if __name__ == "__main__":
+
+
     st.title("Podify 🎙️")
     st.divider()
     st.subheader("Generate your podcast from a PDF")
@@ -54,7 +56,6 @@ if __name__ == "__main__":
 
     if uploaded_pdf:
         pdf_text = extract_text_from_pdf(uploaded_pdf)
-
 
         summary = ask_openai(f"create a podcast script of: \n\n{pdf_text}")
 
