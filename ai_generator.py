@@ -55,7 +55,8 @@ if __name__ == "__main__":
     if uploaded_pdf:
         pdf_text = extract_text_from_pdf(uploaded_pdf)
 
-        summary = ask_openai(f"Summarize the following text:\n\n{pdf_text}")
+        if st.button("Make Script"):
+            summary = ask_openai(f"create a podcast script of: \n\n{pdf_text}")
 
         col1, col2 = st.columns(2)
 
