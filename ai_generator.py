@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API_KEY")   
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 engine = pyttsx3.init()
 engine.setProperty('rate', 150)
 engine.setProperty('volume', 1.0)
@@ -21,7 +21,7 @@ def ask_openai(theme):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",  # You can use "gpt-4" if available to you
             messages=[
-                {"role": "system", "content": f"you're going to make a script for a podcast about {theme}"},
+                {"role": "system", "content": f"you're going to make a script for a podcast about this PDF that has al this text: {theme}"},
                 {"role": "user", "content": theme}
             ],
             temperature=0.7,
