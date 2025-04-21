@@ -5,6 +5,8 @@ import streamlit as st
 import PyPDF2
 import os
 from dotenv import load_dotenv
+import base64
+import streamlit.components.v1 as components
 
 load_dotenv()
 
@@ -66,5 +68,8 @@ if __name__ == "__main__":
             summary_text = st.text_area("Summary", summary, height=300)
 
         if st.button("Generate Podcast"):
-            audio = generate_audio(summary)
-            st.audio(audio, format="audio/mp3")
+            # Generate audio bytes and embed via HTML for better mobile support
+            audio_bytes = generate_audio(summary).getvalue()
+            b64 = base64.b64encode(audio_bytes).decode()
+            audio_html = f'<audio controls src="data:audio/mp3;base64,{b64}"></audio>'
+            components.html(audio_html, height=100)
