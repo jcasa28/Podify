@@ -46,8 +46,10 @@ def extract_text_from_pdf(uploaded_file):
 
 # Example usage
 if __name__ == "__main__":
-
-
+    st.set_page_config(
+        page_title="Podify",
+        page_icon="🎙️"
+    )
     st.title("Podify 🎙️")
     st.divider()
     st.subheader("Generate your podcast from a PDF")
